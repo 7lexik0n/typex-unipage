@@ -102,9 +102,11 @@ export default class App extends Component {
     });
   };
 
-  restart = () => {
+  restart = (evt) => {
     this.updateText();
     this.start();
+
+    evt.target.blur();
   };
 
   updateText() {
