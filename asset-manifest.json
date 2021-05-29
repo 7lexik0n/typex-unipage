@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/typex-unipage/static/css/main.09c63c06.chunk.css",
-    "main.js": "/typex-unipage/static/js/main.6274dd9e.chunk.js",
-    "main.js.map": "/typex-unipage/static/js/main.6274dd9e.chunk.js.map",
+    "main.js": "/typex-unipage/static/js/main.de4a66c7.chunk.js",
+    "main.js.map": "/typex-unipage/static/js/main.de4a66c7.chunk.js.map",
     "runtime-main.js": "/typex-unipage/static/js/runtime-main.d6e55186.js",
     "runtime-main.js.map": "/typex-unipage/static/js/runtime-main.d6e55186.js.map",
     "static/css/2.15a7a700.chunk.css": "/typex-unipage/static/css/2.15a7a700.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.15a7a700.chunk.css",
     "static/js/2.e622bbeb.chunk.js",
     "static/css/main.09c63c06.chunk.css",
-    "static/js/main.6274dd9e.chunk.js"
+    "static/js/main.de4a66c7.chunk.js"
   ]
 }
