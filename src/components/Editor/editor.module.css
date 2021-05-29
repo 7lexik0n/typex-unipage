@@ -2,12 +2,12 @@
   margin-bottom: 20px;
 }
 .currentLetter {
-  padding: 0 1px;
-  background: green;
+  padding: 2px 3px;
+  background: LightSeaGreen;
   color: #fff;
 }
 .wrongLetter {
-  padding: 0 1px;
+  padding: 2px 3px;
   background: tomato;
   color: #fff;
 }

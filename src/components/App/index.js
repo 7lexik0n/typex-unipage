@@ -1,18 +1,22 @@
 import { Component } from "react";
 import Editor from "../Editor";
+import Modal from "../Modal";
+import Navbar from "../Navbar";
+import Spinner from "../Spinner";
 import Statistic from "../Statistic";
 
-const TEXT_API = `https://baconipsum.com/api/?type=meat-and-filler`;
+const TEXT_API = `https://baconipsum.com/api/?type=meat-and-filler&sentences=2`;
 
 export default class App extends Component {
   state = {
-    text: `Loading...`,
+    text: ``,
     position: 0,
     attempts: 0,
     corrects: 0,
     mistakes: 0,
     speed: 0,
     start: new Date(),
+    finish: false,
   };
 
   onKeyDownHandler = (evt) => {
@@ -29,7 +33,7 @@ export default class App extends Component {
     const { text, position, attempts, corrects } = this.state;
 
     if (position === text.length - 1) {
-      return;
+      this.finish();
     }
 
     this.setState({
@@ -63,11 +67,47 @@ export default class App extends Component {
     this.setState({ speed });
   };
 
-  updateText() {
+  getAccuracy = () => {
+    const { attempts = 0, mistakes = 0 } = this.state;
+    let accuracy;
+
+    if (attempts > 0) {
+      accuracy = mistakes > 0 ? 100 - (100 * mistakes) / attempts : 100;
+    } else {
+      accuracy = 0;
+    }
+
+    return accuracy.toFixed(2);
+  };
+
+  start = () => {
     if (this.speedInterval) {
       clearInterval(this.speedInterval);
     }
 
+    this.speedInterval = setInterval(this.getSpeed, 1000);
+
+    this.setState({
+      start: new Date(),
+    });
+  };
+
+  finish = () => {
+    if (this.speedInterval) {
+      clearInterval(this.speedInterval);
+    }
+
+    this.setState({
+      finish: true,
+    });
+  };
+
+  restart = () => {
+    this.updateText();
+    this.start();
+  };
+
+  updateText() {
     fetch(TEXT_API)
       .then((response) => response.json())
       .then((result) => {
@@ -81,9 +121,8 @@ export default class App extends Component {
           mistakes: 0,
           speed: 0,
           start: new Date(),
+          finish: false,
         });
-        
-        this.speedInterval = setInterval(this.getSpeed, 1000);
       });
   }
 
@@ -94,26 +133,64 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.speedInterval);
+    if (this.speedInterval) {
+      clearInterval(this.speedInterval);
+    }
 
     document.removeEventListener("keypress", this.onKeyDownHandler);
   }
 
   render() {
-    const {
-      text,
-      position,
-      correctKey = true,
-      attempts,
-      mistakes,
-      speed
-    } = this.state;
+    const { text, position, correctKey = true, speed, finish } = this.state;
+
+    const editorContent = text ? (
+      <Editor text={text} position={position} wrongLetter={!correctKey} />
+    ) : (
+      <Spinner />
+    );
+
+    const finishBody = finish ? (
+      <Modal
+        title="Results"
+        body={
+          <>
+            <p>Accuracy: {this.getAccuracy()}%</p>
+            <p>Speed: {speed} symbols/min.</p>
+          </>
+        }
+        button="RESTART"
+        id="finishModal"
+        onButtonHandler={this.restart}
+      />
+    ) : null;
 
     return (
       <div>
-        <h1>TYPEX</h1>
-        <Editor text={text} position={position} wrongLetter={!correctKey} />
-        <Statistic attempts={attempts} mistakes={mistakes} speed={speed} />
+        <Navbar title="TYPEX" />
+        <div className="container-fluid mt-5">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-9">{editorContent}</div>
+                <div className="col-md-3 border-start">
+                  <Statistic
+                    accuracy={this.getAccuracy()}
+                    speed={speed}
+                    onRestart={this.restart}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Modal
+          title="Start"
+          body="Press START to begin print!"
+          button="START"
+          id="startModal"
+          onButtonHandler={this.start}
+        />
+        {finishBody}
       </div>
     );
   }

@@ -1,18 +1,13 @@
 export default function Statistic(props) {
-  const { attempts = 0, mistakes = 0, speed = 0 } = props;
-  let accuracy;
-
-  if (attempts > 0) {
-    accuracy = mistakes > 0 ? 100 - (100 * mistakes) / attempts : 100;
-  } else {
-    accuracy = 0;
-  }
+  const { accuracy = 0, speed = 0, onRestart } = props;
 
   return (
     <div>
-      <div>STATISTIC</div>
-      <div>Accuracy: {accuracy.toFixed(2)}%</div>
-      <div>Speed: {speed} symbols/min.</div>
+      <div className="alert alert-primary">Accuracy: {accuracy}%</div>
+      <div className="alert alert-success">Speed: {speed} symbols/min.</div>
+      <button type="button" className="btn btn-primary" onClick={onRestart}>
+        Restart
+      </button>
     </div>
   );
 }
