@@ -1,0 +1,13 @@
+.editor {
+  margin-bottom: 20px;
+}
+.currentLetter {
+  padding: 0 1px;
+  background: green;
+  color: #fff;
+}
+.wrongLetter {
+  padding: 0 1px;
+  background: tomato;
+  color: #fff;
+}
